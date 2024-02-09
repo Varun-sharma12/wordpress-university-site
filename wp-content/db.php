@@ -1,0 +1,1 @@
+/home/newtonvarun/Local Sites/fictional-university/app/public/wp-content/plugins/query-monitor/wp-content/db.php

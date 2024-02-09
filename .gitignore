@@ -1,0 +1,105 @@
+# https://github.com/github/gitignore
+# http://git-scm.com/docs/gitignore
+
+# phpstorm, webstorm
+.idea/
+
+
+# sublime and other ide
+.project
+.htaccess
+*.sublime-*
+.brackets.json
+_notes
+.vscode
+
+# logs and cache
+/logs/
+*.log
+npm-debug.log*
+.sass-cache
+.cache
+.php_cs.cache
+
+# OS generated files
+[Tt]humbs.db
+ehthumbs.db
+*~
+.*~
+._*
+*.bak
+*.save
+*.swp
+
+
+# Recycle bin folder used by different os
+.Trash-*
+$RECYCLE.BIN/
+
+# Windows shortcuts
+*.lnk
+
+# Folder config file
+[Dd]esktop.ini
+*.DS_Store
+.DS_Store?
+.DS_Store
+_DS_Store
+
+
+# node packages
+# https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
+node_modules/
+
+
+# bower packages
+bower_components/
+
+# svn folders
+.svn/
+
+# Composer, exclude on root vendor folder
+
+# Security tokens
+*.pem
+*.pub
+*.crt
+*.key
+
+
+!wp-content/themes/crosswalkcommons/
+# Project related
+/wp-admin/
+/wp-includes/
+/*.php
+/license.txt
+/readme.html
+/wp-content/uploads
+/wp-content/upgrade
+/wp-content/themes/twenty*
+/wp-content/index.php
+/wp-content/mu-plugins
+/wp-content/plugins/
+/wp-content/mailpoet
+/wp-content/ai1wm-backups
+/license.txt
+/index.php
+/pantheon.upstream.yml
+/pantheon.yml
+/readme.html
+/wp-activate.php
+/wp-blog-header.php
+/wp-comments-post.php
+/wp-config-sample.php
+/wp-config.php
+/wp-cron.php
+/wp-links-opml.php
+/wp-load.php
+/wp-login.php
+/wp-mail.php
+/wp-settings.php
+/wp-signup.php
+/wp-trackback.php
+/xmlrpc.php
+/app
+/.htaccess
