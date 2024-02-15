@@ -38,7 +38,6 @@ class Search {
       }
     }
     this.previousValue = this.searchField.val();
-    //
   }
 
   getResults() {

@@ -1,13 +1,16 @@
 <?php
 
-function university_custom_rest(){
+require get_theme_file_path('inc/search-route.php');
 
+//Adding custom field in the rest api of post .
+function university_custom_rest(){
   register_rest_field('post', 'authorName', array(
     "get_callback" => function(){return get_the_author(); }
   ));
 }
-
 add_action('rest_api_init', 'university_custom_rest');
+
+//Enqueuing the Scripts.
 function university_files()
 {
   wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
@@ -16,14 +19,14 @@ function university_files()
   wp_enqueue_style('custom-google-fonts', "//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i");
   wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), 1.0, true);
   // wp_enqueue_script('googleMap', '//maps.googlepis.com/maps/api/js?key=', null, 1.0, true);
-
-wp_localize_script('main-university-js','universityData',array(
+//Localizing the  script and providing the base url in object to use in search file
+ wp_localize_script('main-university-js','universityData',array(
   'root_url' => get_site_url()
 ));
 }
 add_action('wp_enqueue_scripts', 'university_files');
 
-//Registering Nav Menus
+//Adding the theme suppor option for activating various options on backend
 function university_features()
 {
   // register_nav_menu('headerMenuLocation','Header Menu Location');
@@ -37,7 +40,7 @@ function university_features()
 }
 add_action('after_setup_theme', 'university_features');
 
-//Customizing the custom queries.
+//Customizing the custom queries Which are not native to wordpress.
 function university_adjust_queries($query)
 {
   if (!is_admin() and is_post_type_archive('campsus') and is_main_query()) {
@@ -67,6 +70,8 @@ function university_adjust_queries($query)
 }
 add_action('pre_get_posts', 'university_adjust_queries');
 
+
+//Making the pageBanner function global to use it in various pages and rendering the data conditionally.
 function pageBanner($args = null)
 {
   if (!isset($args['title'])) {
@@ -98,6 +103,8 @@ function pageBanner($args = null)
   </div>
 
 <?php }
+
+//Adding the map api key by using the acf filter.
 function universityMapKey($api){
 $api['key'] = '';
 return $api;

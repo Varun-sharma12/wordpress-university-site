@@ -1,6 +1,7 @@
 <?php
 
 get_header(); 
+//Calling the pageBanner function to show the data accordingly.
 pageBanner(array(
   'title' => 'Our Campuses',
   'subtitle' => 'We have several located Campuses on different locations.'
