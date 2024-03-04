@@ -240,11 +240,11 @@ class Search {
       <div className="row">
   <div className="one-third">
   <h2 class="search-overlay__section-title">General Information</h2>
-  ${results.generalInfo.length ? '<ul className="link-list min-list">' : '<p>No General Information matches that search.</p>'}
+  ${results.generalInfo.length ? '<ul className="link-list min-list">' : "<p>No General Information matches that search.</p>"}
  ${results.generalInfo.map(post => {
         return `<li><a href="${post.permalink}">${post.title}</a>${post.postType == "post" ? ` by ${post.authorName} ` : ""} </li>`;
       }).join("")}          
-    ${results.generalInfo.length ? '</ul>' : ''}
+    ${results.generalInfo.length ? "</ul>" : ""}
   </div>
   <div className="one-third">
   <h2 class="search-overlay__section-title">Programs</h2>
@@ -252,7 +252,7 @@ class Search {
  ${results.programs.map(post => {
         return `<li><a href="${post.permalink}">${post.title}</a></li>`;
       }).join("")}          
-    ${results.programs.length ? '</ul>' : ''}
+    ${results.programs.length ? "</ul>" : ""}
 
   <h2 class="search-overlay__section-title">Professors</h2>
   ${results.professors.length ? '<ul className="professor-cards">' : `<p>No programs matches that search. <a href= "${universityData.root_url}/programs">View all the programs</a></p>`}
@@ -266,7 +266,7 @@ class Search {
               </a>
       </li>`;
       }).join("")}          
-    ${results.professors.length ? '</ul>' : ''}
+    ${results.professors.length ? "</ul>" : ""}
   </div>
   <div className="one-third">
   <h2 class="search-overlay__section-title">Campuses</h2>
@@ -274,10 +274,10 @@ class Search {
  ${results.campuses.map(post => {
         return `<li><a href="${post.permalink}">${post.title}</a></li>`;
       }).join("")}          
-    ${results.campuses.length ? '</ul>' : ''}
+    ${results.campuses.length ? "</ul>" : ""}
 
   <h2 class="search-overlay__section-title">Events</h2>
-  ${results.events.length ? '' : `<p>No events matches that search. <a href= "${universityData.root_url}/events">View all the events</a></p>`}
+  ${results.events.length ? "" : `<p>No events matches that search. <a href= "${universityData.root_url}/events">View all the events</a></p>`}
  ${results.events.map(post => {
         return `
       <div class="event-summary">
@@ -315,7 +315,7 @@ class Search {
     //         console.log(posts);
     //         var combinedResult = posts[0].concat(pages[0]);
     //         let html = combinedResult.length
-    //           ? `<h2 className="search-overlay__section-title">General Information</h2>     
+    //           ? `<h2 className="search-overlay__section-title">General Information</h2>
     //      <ul className="link-list min-list">
     //     ${combinedResult
     //       .map((post) => {
@@ -323,7 +323,7 @@ class Search {
     //           post.type == "post" ? ` by ${post.authorName} ` : ""
     //         } </li>`;
     //       })
-    //       .join("")}          
+    //       .join("")}
     // </ul>`
     //           : `<p>No content Found</p>`;
     //         this.resultDiv.html(html);

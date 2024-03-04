@@ -15,7 +15,7 @@ while (have_posts()):
       </p>
     </div>
     <div class="generic-content">
-      <?php the_content(); ?>
+      <?php the_field('main_body_content');?>
       <!-- <h2 class="headline headline--small-plus t-center">Upcoming Events</h2> -->
       <?php
       $relatedProfessors = new WP_Query(
