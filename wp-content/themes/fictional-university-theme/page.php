@@ -5,8 +5,8 @@
   while(have_posts()) {
     the_post();
     pageBanner(array(
-      'title' => 'this is title',
-      'subtitle' => 'this is subtitle',
+      'title' => '',
+      'subtitle' => '',
       'photo' => ''
     ));
      ?>  

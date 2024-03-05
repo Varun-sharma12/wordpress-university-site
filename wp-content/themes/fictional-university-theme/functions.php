@@ -74,13 +74,14 @@ add_action('pre_get_posts', 'university_adjust_queries');
 //Making the pageBanner function global to use it in various pages and rendering the data conditionally.
 function pageBanner($args = null)
 {
-  if (!isset($args['title'])) {
+  // print_r(isset($args['title']));
+  if (!empty(isset($args['title'])) && empty($args['title'])) {
     $args['title'] = get_the_title();
   }
-  if (!isset($args['subtitle'])) {
+  if (!empty(isset($args['subtitle']))) {
     $args['subtitle'] = get_field('page_banner_subtitle');
   }
-  if (!isset($args['photo'])) {
+  if (!empty(isset($args['photo']))) {
     if (get_field('page_banner_background_image') and !is_archive() and !is_home()) {
       $args['photo'] = get_field('page_banner_background_image')['sizes']['pageBanner'];
     } else {
@@ -111,3 +112,42 @@ return $api;
 }
 
 add_action('acf/fields/google_map/api', 'universityMapKey');
+
+//Redirect subscriber account out of admin and onto homepage
+add_action('admin_init', 'redirectSubsToFrontend');
+function redirectSubsToFrontend(){
+  $ourCurrentUser = wp_get_current_user();
+  if(count($ourCurrentUser->roles) == 1 AND $ourCurrentUser->roles[0] == 'subscriber'){
+    wp_redirect(site_url('/'));
+    exit;
+  } 
+}
+
+//Removing the admin bar for the subscriber account
+add_action('wp_loaded', 'noSubsAdminBar');
+function noSubsAdminBar(){
+  $ourCurrentUser = wp_get_current_user();
+  if(count($ourCurrentUser->roles) == 1 AND $ourCurrentUser->roles[0] == 'subscriber'){
+   show_admin_bar(false);
+  } 
+}
+// Customize login screen
+add_filter('login_headerurl', 'ourHeaderUrl');
+function ourHeaderUrl(){
+  return esc_url(Site_url('/'));
+}
+
+//Enqueue the styles to change the layout of login screen
+add_action('login_enqueue_scripts', 'ourLoginCSS');
+function ourLoginCSS(){
+  wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
+  wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
+  wp_enqueue_style('font-awesome', "//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+  wp_enqueue_style('custom-google-fonts', "//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i");
+}
+
+//Changing the text of login screen header title
+add_filter('login_headertext', 'ourLoginTitle');
+function ourLoginTitle(){
+return get_bloginfo('name');
+}

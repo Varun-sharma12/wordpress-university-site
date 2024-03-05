@@ -344,6 +344,7 @@ class Search {
     this.searchOverlay.addClass("search-overlay--active");
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("body").addClass("body-no-scroll");
     this.isOverlayOpen = true;
+    return false;
   }
   closeOverlay() {
     this.searchOverlay.removeClass("search-overlay--active");

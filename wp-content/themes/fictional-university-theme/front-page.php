@@ -58,10 +58,7 @@ get_header(); ?>
       while ($homePagePosts->have_posts()):
         $homePagePosts->the_post(); ?>
         <div class="event-summary">
-          <!-- <?php 
-          echo'<pre>';
-          print_r($homePagePosts); ?> -->
-          <a class="event-summary__date event-summary__date--beige t-center" href="#">
+              <a class="event-summary__date event-summary__date--beige t-center" href="#">
             <span class="event-summary__month">
               <?php echo get_the_date('M'); ?>
             </span>

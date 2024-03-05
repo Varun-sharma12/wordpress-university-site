@@ -187,6 +187,7 @@ class Search {
     else if (e.keyCode === 27 && this.isOverlayOpen) this.closeOverlay();
   }
   openOverlay() {
+
     console.log(this.searchField);
     this.searchField.val("");
     this.resultDiv.html("");
@@ -194,6 +195,7 @@ class Search {
     this.searchOverlay.addClass("search-overlay--active");
     $("body").addClass("body-no-scroll");
     this.isOverlayOpen = true;
+    return false;
   }
   closeOverlay() {
     this.searchOverlay.removeClass("search-overlay--active");

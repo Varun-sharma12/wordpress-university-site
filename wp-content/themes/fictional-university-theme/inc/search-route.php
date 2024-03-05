@@ -75,6 +75,7 @@ function universitySearchResults($data)
     }
 
     if (get_post_type() === 'program') {
+      //Getting the related campus to the program if a term entered matches a program
       $relatedCampuses = get_field('related_campus');
       if($relatedCampuses){
       foreach($relatedCampuses as $campus){
@@ -89,7 +90,7 @@ function universitySearchResults($data)
         $results['programs'],
         array(
           'title' => get_the_title(),
-          'id' => get_the_id(),
+          'id' => get_the_id(), //Getting the id to use in the relationship query to find professors
           'permalink' => get_the_permalink(),
         )
       );
@@ -135,7 +136,7 @@ function universitySearchResults($data)
       )
       );
     }
-    //Making a relationship query to search for the related professror if the term entered is a program.
+    //Making a relationship query to search for the related professror and event if the term entered is a program.
     $programRelationshipQuery = new WP_Query(
       array(
         'post_type' => array('professor', 'event'),
@@ -155,6 +156,7 @@ function universitySearchResults($data)
           )
         );
       }
+      //Checking for event post type
       if (get_post_type() === 'event') {
         $eventDate = new DateTime(get_field('event_date'));
         $description = has_excerpt() ? get_the_excerpt() : wp_trim_words(get_the_content(), 25);
@@ -173,7 +175,7 @@ function universitySearchResults($data)
    
     endwhile;
     wp_reset_postdata();
-    // Removing duplicate professor from the result 
+    // Removing duplicate professor and events from the result 
     $results['professors'] = array_values(array_unique($results['professors'], SORT_REGULAR));
     $results['events'] = array_values(array_unique($results['events'], SORT_REGULAR));
     

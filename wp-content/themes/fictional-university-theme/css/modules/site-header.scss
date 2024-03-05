@@ -64,7 +64,7 @@
     }
 
     @include atMedium {
-      display: none;
+      display: none!important;
     }
   }
 
@@ -83,7 +83,7 @@
     }
 
     @include atMedium {
-      display: none;
+      display: none!important;
     }
   }
 
