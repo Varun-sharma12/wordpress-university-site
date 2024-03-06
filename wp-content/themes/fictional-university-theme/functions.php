@@ -3,10 +3,26 @@
 require get_theme_file_path('inc/search-route.php');
 
 //Adding custom field in the rest api of post .
-function university_custom_rest(){
-  register_rest_field('post', 'authorName', array(
-    "get_callback" => function(){return get_the_author(); }
-  ));
+function university_custom_rest()
+{
+  register_rest_field(
+    'post',
+    'authorName',
+    array(
+      "get_callback" => function () {
+        return get_the_author();
+      }
+    )
+  );
+  register_rest_field(
+    'note',
+    'userNoteCount',
+    array(
+      "get_callback" => function () {
+        return count_user_posts(get_current_user_id(), 'note');
+      }
+    )
+  );
 }
 add_action('rest_api_init', 'university_custom_rest');
 
@@ -20,10 +36,14 @@ function university_files()
   wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), 1.0, true);
   // wp_enqueue_script('googleMap', '//maps.googlepis.com/maps/api/js?key=', null, 1.0, true);
 //Localizing the  script and providing the base url in object to use in search file
- wp_localize_script('main-university-js','universityData',array(
-  'root_url' => get_site_url(),
-  'nonce' => wp_create_nonce('wp_rest')
-));
+  wp_localize_script(
+    'main-university-js',
+    'universityData',
+    array(
+      'root_url' => get_site_url(),
+      'nonce' => wp_create_nonce('wp_rest')
+    )
+  );
 }
 add_action('wp_enqueue_scripts', 'university_files');
 
@@ -58,14 +78,16 @@ function university_adjust_queries($query)
     $query->set('meta_key', 'event_date');
     $query->set('orderby', 'meta_value_num');
     $query->set('order', 'ASC');
-    $query->set('meta_query', array(
+    $query->set(
+      'meta_query',
       array(
-        'key' => 'event_date',
-        'compare' => '>=',
-        'value' => $today,
-        'type' => 'numeric'
+        array(
+          'key' => 'event_date',
+          'compare' => '>=',
+          'value' => $today,
+          'type' => 'numeric'
+        )
       )
-    )
     );
   }
 }
@@ -107,40 +129,45 @@ function pageBanner($args = null)
 <?php }
 
 //Adding the map api key by using the acf filter.
-function universityMapKey($api){
-$api['key'] = '';
-return $api;
+function universityMapKey($api)
+{
+  $api['key'] = '';
+  return $api;
 }
 
 add_action('acf/fields/google_map/api', 'universityMapKey');
 
 //Redirect subscriber account out of admin and onto homepage
 add_action('admin_init', 'redirectSubsToFrontend');
-function redirectSubsToFrontend(){
+function redirectSubsToFrontend()
+{
   $ourCurrentUser = wp_get_current_user();
-  if(count($ourCurrentUser->roles) == 1 AND $ourCurrentUser->roles[0] == 'subscriber'){
+  if (count($ourCurrentUser->roles) == 1 and $ourCurrentUser->roles[0] == 'subscriber') {
     wp_redirect(site_url('/'));
     exit;
-  } 
+  }
 }
 
 //Removing the admin bar for the subscriber account
 add_action('wp_loaded', 'noSubsAdminBar');
-function noSubsAdminBar(){
+function noSubsAdminBar()
+{
   $ourCurrentUser = wp_get_current_user();
-  if(count($ourCurrentUser->roles) == 1 AND $ourCurrentUser->roles[0] == 'subscriber'){
-   show_admin_bar(false);
-  } 
+  if (count($ourCurrentUser->roles) == 1 and $ourCurrentUser->roles[0] == 'subscriber') {
+    show_admin_bar(false);
+  }
 }
 // Customize login screen
 add_filter('login_headerurl', 'ourHeaderUrl');
-function ourHeaderUrl(){
+function ourHeaderUrl()
+{
   return esc_url(Site_url('/'));
 }
 
 //Enqueue the styles to change the layout of login screen
 add_action('login_enqueue_scripts', 'ourLoginCSS');
-function ourLoginCSS(){
+function ourLoginCSS()
+{
   wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
   wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
   wp_enqueue_style('font-awesome', "//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
@@ -149,6 +176,30 @@ function ourLoginCSS(){
 
 //Changing the text of login screen header title
 add_filter('login_headertext', 'ourLoginTitle');
-function ourLoginTitle(){
-return get_bloginfo('name');
+function ourLoginTitle()
+{
+  return get_bloginfo('name');
 }
+
+//Force note posts to be private
+add_filter('wp_insert_post_data', 'makeNotePrivate', 10, 2);
+function makeNotePrivate($data, $postarr)
+{
+  // print_r($data);
+  //checking if the post is note 
+  if ($data['post_type'] == 'note') {
+    //Checking whether user exceeds the limit of making notes $postarr is to check for edit and delete
+    if (count_user_posts(get_current_user_id(), 'note') > 4 AND !$postarr['ID']) {
+      die("You have reached your note limit.");
+    }
+    //Sanitizing the title and content of notes for safety purpose
+    $data['post_content'] = sanitize_textarea_field($data['post_content']);
+    $data['post_title'] = sanitize_text_field($data['post_title']);
+  }
+  //changing the post status to private on server side if the post is note type 
+  if ($data['post_type'] == 'note' AND $data['post_status'] != 'trash') {
+    $data['post_status'] = "private";
+  }
+  return $data;
+}
+

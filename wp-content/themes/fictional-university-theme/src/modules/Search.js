@@ -178,13 +178,13 @@ class Search {
   }
 
   keyPressDispatcher(e) {
-    if (
-      e.keyCode == 83 &&
-      !this.isOverlayOpen &&
-      $("input, textarea").is(":focus")
-    )
-      this.openOverlay();
-    else if (e.keyCode === 27 && this.isOverlayOpen) this.closeOverlay();
+    // if (
+    //   e.keyCode == 83 &&
+    //   !this.isOverlayOpen &&
+    //   $("input, textarea").is(":focus")
+    // )
+    //   this.openOverlay();
+    // else if (e.keyCode === 27 && this.isOverlayOpen) this.closeOverlay();
   }
   openOverlay() {
 
