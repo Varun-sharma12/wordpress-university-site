@@ -1,5 +1,5 @@
 <?php
-
+require get_theme_file_path('inc/like-route.php');
 require get_theme_file_path('inc/search-route.php');
 
 //Adding custom field in the rest api of post .
@@ -95,28 +95,31 @@ add_action('pre_get_posts', 'university_adjust_queries');
 
 
 //Making the pageBanner function global to use it in various pages and rendering the data conditionally.
-function pageBanner($args = null)
+function pageBanner($args = NULL)
 {
-  // print_r(isset($args['title']));
-  if (!empty(isset($args['title'])) && empty($args['title'])) {
+
+  if (!isset($args['title'])) {
     $args['title'] = get_the_title();
   }
-  if (!empty(isset($args['subtitle']))) {
+
+  if (!isset($args['subtitle'])) {
     $args['subtitle'] = get_field('page_banner_subtitle');
   }
-  if (!empty(isset($args['photo']))) {
+
+  if (!isset($args['photo'])) {
     if (get_field('page_banner_background_image') and !is_archive() and !is_home()) {
       $args['photo'] = get_field('page_banner_background_image')['sizes']['pageBanner'];
     } else {
       $args['photo'] = get_theme_file_uri('/images/ocean.jpg');
     }
   }
+
   ?>
   <div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url(<?php echo $args['photo']; ?>)"></div>
+    <div class="page-banner__bg-image" style="background-image: url(<?php echo $args['photo']; ?>);"></div>
     <div class="page-banner__content container container--narrow">
       <h1 class="page-banner__title">
-        <?php echo $args['title']; ?>
+        <?php echo $args['title'] ?>
       </h1>
       <div class="page-banner__intro">
         <p>
@@ -125,7 +128,6 @@ function pageBanner($args = null)
       </div>
     </div>
   </div>
-
 <?php }
 
 //Adding the map api key by using the acf filter.
@@ -189,7 +191,7 @@ function makeNotePrivate($data, $postarr)
   //checking if the post is note 
   if ($data['post_type'] == 'note') {
     //Checking whether user exceeds the limit of making notes $postarr is to check for edit and delete
-    if (count_user_posts(get_current_user_id(), 'note') > 4 AND !$postarr['ID']) {
+    if (count_user_posts(get_current_user_id(), 'note') > 4 and !$postarr['ID']) {
       die("You have reached your note limit.");
     }
     //Sanitizing the title and content of notes for safety purpose
@@ -197,7 +199,7 @@ function makeNotePrivate($data, $postarr)
     $data['post_title'] = sanitize_text_field($data['post_title']);
   }
   //changing the post status to private on server side if the post is note type 
-  if ($data['post_type'] == 'note' AND $data['post_status'] != 'trash') {
+  if ($data['post_type'] == 'note' and $data['post_status'] != 'trash') {
     $data['post_status'] = "private";
   }
   return $data;

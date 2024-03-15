@@ -2067,9 +2067,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/GoogleMap */ "./src/modules/GoogleMap.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
+/* harmony import */ var _modules_Like__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/Like */ "./src/modules/Like.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -2081,6 +2083,7 @@ const heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default
 const googleMap = new _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__["default"]();
 const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_4__["default"]();
 const myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_5__["default"]();
+const like = new _modules_Like__WEBPACK_IMPORTED_MODULE_6__["default"]();
 
 /***/ }),
 
@@ -2206,6 +2209,114 @@ class HeroSlider {
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroSlider);
+
+/***/ }),
+
+/***/ "./src/modules/Like.js":
+/*!*****************************!*\
+  !*** ./src/modules/Like.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+//This file works for the like professor functionality
+
+class Like {
+  constructor() {
+    this.events();
+  }
+  //All the events will be here.
+  events() {
+    //Fire Event on click
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".like-box").on("click", this.ourClickDispatcher.bind(this));
+  }
+  ourClickDispatcher(e) {
+    //Get only the closest element containing like-box class where we click.
+    var currentLikeBox = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).closest(".like-box");
+    console.log("sdfsd54423", currentLikeBox);
+    if (currentLikeBox.attr("data-exists") == "yes") {
+      this.deleteLike(currentLikeBox);
+    } else {
+      this.createLike(currentLikeBox);
+    }
+  }
+  //CreatLike function with Fetch instead of ajax.
+  //   createLike(currentLikeBox) {
+  //     console.log(currentLikeBox)
+  //     const data = {
+  //         'professorId' : currentLikeBox.data('professor'),
+  //     };
+  //     console.log(data)
+  //     fetch(`${universityData.root_url}/wp-json/university/v1/manageLike`, {
+  //         headers: {
+  //             'Content-Type' : 'application/json'
+  //         },
+  //         credentials: 'same-origin',
+  //         method: 'POST',
+  //         body: JSON.stringify(data),
+  //     }).then(function(response){
+  //         return response.json();
+  //     }).then (response => {
+  //         console.log(response);
+  //     }).catch(err => console.log(`error : ${err}`))
+  // }
+
+  createLike(currentLikeBox) {
+    // console.log(universityData.nonce)
+    //Ajax call on the custom rest api end point to create a like post with professor id saved in custom field
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/university/v1/manageLike",
+      type: "POST",
+      data: {
+        professorID: currentLikeBox.data("professor")
+      },
+      success: response => {
+        currentLikeBox.attr("data-exists", "yes");
+        var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+        currentLikeBox.find(".like-count").html(likeCount + 1);
+        currentLikeBox.attr("data-like", response);
+        console.log("sdfsdf", response);
+      },
+      error: response => {
+        console.log(response);
+      }
+    });
+  }
+  deleteLike(currentLikeBox) {
+    //Ajax call on the custom rest api end point to delete a like post.
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/university/v1/manageLike",
+      type: "DELETE",
+      data: {
+        like: currentLikeBox.attr("data-like")
+      },
+      success: response => {
+        currentLikeBox.attr("data-exists", "no");
+        var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+        currentLikeBox.find(".like-count").html(likeCount - 1);
+        currentLikeBox.attr("data-like", "");
+        // console.log("sdfsdf",response)
+        console.log(response);
+      },
+      error: response => {
+        console.log(response);
+      }
+    });
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Like);
 
 /***/ }),
 
@@ -2543,13 +2654,7 @@ class Search {
     //     );
   }
   keyPressDispatcher(e) {
-    // if (
-    //   e.keyCode == 83 &&
-    //   !this.isOverlayOpen &&
-    //   $("input, textarea").is(":focus")
-    // )
-    //   this.openOverlay();
-    // else if (e.keyCode === 27 && this.isOverlayOpen) this.closeOverlay();
+    if (e.keyCode == 83 && !this.isOverlayOpen && jquery__WEBPACK_IMPORTED_MODULE_0___default()("input, textarea").is(":focus")) this.openOverlay();else if (e.keyCode === 27 && this.isOverlayOpen) this.closeOverlay();
   }
   openOverlay() {
     console.log(this.searchField);
