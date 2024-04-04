@@ -98,15 +98,15 @@ add_action('pre_get_posts', 'university_adjust_queries');
 function pageBanner($args = NULL)
 {
 
-  if (!isset($args['title'])) {
+  if (!isset($args['title']) || empty($args['title'])) {
     $args['title'] = get_the_title();
   }
-
-  if (!isset($args['subtitle'])) {
-    $args['subtitle'] = get_field('page_banner_subtitle');
+  
+  if (!isset($args['subtitle']) || empty($args['subtitle'])) {
+     $args['subtitle'] = get_field('page_banner_subtitle');
   }
-
-  if (!isset($args['photo'])) {
+  
+  if (!isset($args['photo']) || empty($args['photo'])) {
     if (get_field('page_banner_background_image') and !is_archive() and !is_home()) {
       $args['photo'] = get_field('page_banner_background_image')['sizes']['pageBanner'];
     } else {
