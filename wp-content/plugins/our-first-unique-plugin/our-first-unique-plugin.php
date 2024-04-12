@@ -5,6 +5,8 @@ Description: A truly amazing plugin.
 Version: 1.0
 Author: Varun
 Author URI:
+Text Domain: wcpdomain
+Domain Path: /languages
 */
 
 class WordCountAndTimePlugin
@@ -19,6 +21,11 @@ class WordCountAndTimePlugin
     add_action('admin_init', array($this, 'settings'));
 
     add_filter('the_content', array($this, 'ifWrap'));
+
+    add_action('init', array($this, 'languages'));
+  }
+  function languages(){
+    load_plugin_textdomain('wcpdomain', false, dirname(plugin_basename(__FILE__)) . '/languages');
   }
 
   function ifWrap($content)
@@ -37,6 +44,18 @@ class WordCountAndTimePlugin
   function createHTML($content)
   {
     $html = '<h3>' . get_option('wcp_headline', 'Post Statistics') . '</h3> <p>';
+    if(get_option('wcp_wordcount', 1) OR get_option('wcp_readtime', 1)){
+    $wordCount = str_word_count(strip_tags($content));
+    }
+    if(get_option('wcp_wordcount', 1)){
+    $html .= esc_html__('This post has','wcpdomain').' ' . $wordCount .' '.esc_html__('Words','wcpdomain').'.<br>';
+    }
+    if(get_option('wcp_charactercount', 1)){
+      $html .= 'This Post has ' . strlen(strip_tags($content)) .' Characters.<br>';
+    }
+    if(get_option('wcp_readtime', 1)){
+      $html .= 'This post has ' .round($wordCount/225). ' minute(s) to read. <br>';
+    }
     if (get_option('wcp_location', '0') == '0') {
       return $html . $content;
     } else {
@@ -132,7 +151,7 @@ class WordCountAndTimePlugin
   {
     add_options_page(
       'Word Count Settings',
-      'Word Count',
+      esc_html__('Word Count', 'wcpdomain'), //For the localization purpose
       'manage_options',
       'word-count-settings-page',
       array($this, 'ourHTML')

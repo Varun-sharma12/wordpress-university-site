@@ -86,6 +86,8 @@ bower_components/
 /wp-content/plugins/regenerate-thumbnails
 /wp-content/plugins/wp-image-cropper
 /wp-content/plugins/image-regenerate-select-crop
+/wp-content/plugins/loco-translate
+/wp-content/languages
 /wp-content/mailpoet
 /wp-content/ai1wm-backups
 /license.txt
